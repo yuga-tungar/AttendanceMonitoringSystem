@@ -1,12 +1,23 @@
 package Final;
-
+import java.io.FileInputStream;
+import java.io.IOException;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.Properties;
 
 public class SendEmailTo {
-    final String senderEmail = "vishnupriya.lappasi@cumminscollege.in";
-    final String senderPassword = "comp2027";
+final String senderEmail;
+final String senderPassword;
+// Load credentials from config.properties
+public SendEmailTo(String receiverEmail, String subject, String body) {
+    Properties config = new Properties();
+    try (FileInputStream fis = new FileInputStream("config.properties")) {
+        config.load(fis);
+        this.senderEmail = config.getProperty("smtp.email");
+        this.senderPassword = config.getProperty("smtp.password");
+    } catch (IOException e) {
+        throw new RuntimeException("Failed to load config.properties: " + e.getMessage());
+    }
     final String emailSMTPServer = "smtp.gmail.com";
     final String emailServerPort = "465";
     String receiverEmail;
